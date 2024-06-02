@@ -55,7 +55,7 @@ public class BookServiceTest {
         when(rackRepository.findById(1L)).thenReturn(Optional.of(rack));
         when(bookRepository.save(any(Book.class))).thenReturn(savedBook);
 
-        CreateBookRequest result = bookService.createBook(createBookRequest);
+        BookDto result = bookService.createBook(createBookRequest);
 
         assertNotNull(result.getId());
         assertEquals(1L, result.getId());

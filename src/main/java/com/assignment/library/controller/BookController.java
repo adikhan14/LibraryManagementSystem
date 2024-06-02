@@ -1,6 +1,7 @@
 package com.assignment.library.controller;
 
 import com.assignment.library.dto.CreateBookRequest;
+import com.assignment.library.dto.CreateBookResponse;
 import com.assignment.library.dto.GetBookResponse;
 import com.assignment.library.service.BookService;
 import jakarta.validation.Valid;
@@ -21,10 +22,10 @@ public class BookController {
         this.bookService = bookService;
     }
     @PostMapping
-    public ResponseEntity<CreateBookRequest> createBook(@Valid @RequestBody CreateBookRequest createBookRequest){
-        var savedBookDto = bookService.createBook(createBookRequest);
-        URI location = URI.create(String.format("/books/%s", savedBookDto.getId()));
-        return ResponseEntity.created(location).body(savedBookDto);
+    public ResponseEntity<GetBookResponse> createBook(@Valid @RequestBody CreateBookRequest createBookRequest){
+        var bookDto = bookService.createBook(createBookRequest);
+        URI location = URI.create(String.format("/books/%s", bookDto.getId()));
+        return ResponseEntity.created(location).body(GetBookResponse.builder().book(bookDto).build());
     }
 
     @GetMapping("/{id}")

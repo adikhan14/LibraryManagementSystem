@@ -1,8 +1,6 @@
 package com.assignment.library.controller;
 
-import com.assignment.library.dto.BookDto;
-import com.assignment.library.dto.CreateBookRequest;
-import com.assignment.library.dto.GetBookResponse;
+import com.assignment.library.dto.*;
 import com.assignment.library.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,20 +47,34 @@ public class BookControllerTest {
         createBookRequest.setBookName("Valid Book");
         createBookRequest.setBookDescription("Valid Description");
 
-        CreateBookRequest savedBookRequest = new CreateBookRequest();
-        savedBookRequest.setId(1L);
-        savedBookRequest.setRackId(1L);
-        savedBookRequest.setBookName("Valid Book");
-        savedBookRequest.setBookDescription("Valid Description");
+        var library = LibraryDto.builder()
+                .id(1L)
+                .name("Library").build();
+        var rack = RackDto.builder()
+                .id(1L)
+                .library(library)
+                .columnNumber(1)
+                .rowNumber(1)
+                .build();
+        var bookDto = BookDto.builder()
+                .id(1L)
+                .bookName("Valid Book")
+                .bookDescription("Valid Description")
+                .rack(rack).build();
 
-        when(bookService.createBook(any(CreateBookRequest.class))).thenReturn(savedBookRequest);
+
+        when(bookService.createBook(any(CreateBookRequest.class))).thenReturn(bookDto);
+
+        var response = GetBookResponse.builder()
+                .book(bookDto)
+                .build();
 
         mockMvc.perform(post("/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createBookRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/books/1"))
-                .andExpect(content().json(objectMapper.writeValueAsString(savedBookRequest)));
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
         verify(bookService, times(1)).createBook(any(CreateBookRequest.class));
     }

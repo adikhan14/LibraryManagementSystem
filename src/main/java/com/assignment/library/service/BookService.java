@@ -2,6 +2,7 @@ package com.assignment.library.service;
 
 import com.assignment.library.dto.BookDto;
 import com.assignment.library.dto.CreateBookRequest;
+import com.assignment.library.dto.CreateBookResponse;
 import com.assignment.library.entity.Book;
 import com.assignment.library.mapper.BookMapper;
 import com.assignment.library.repository.BookRepository;
@@ -9,6 +10,7 @@ import com.assignment.library.repository.RackRepository;
 import org.springframework.stereotype.Service;
 
 
+import static com.assignment.library.mapper.BookMapper.fromBook;
 import static com.assignment.library.mapper.BookMapper.toBook;
 
 @Service
@@ -21,7 +23,7 @@ public class BookService {
         this.bookRepository = bookRepository;
         this.rackRepository = rackRepository;
     }
-    public CreateBookRequest createBook(CreateBookRequest createBookRequest){
+    public BookDto createBook(CreateBookRequest createBookRequest){
 
         Book existingBook = null;
         if (createBookRequest.getId() != null)
@@ -31,8 +33,7 @@ public class BookService {
         var book = toBook(createBookRequest, existingBook);
         book.setRack(rack);
         var savedBook = bookRepository.save(book);
-        createBookRequest.setId(savedBook.getId());
-        return createBookRequest;
+        return fromBook(savedBook);
 
     }
 
