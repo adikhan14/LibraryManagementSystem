@@ -1,11 +1,10 @@
 package com.assignment.library.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @NoArgsConstructor
 @Data
@@ -19,8 +18,8 @@ public class Library {
 
     private String name;
 
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
 }
